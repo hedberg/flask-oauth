@@ -240,6 +240,7 @@ class OAuthRemoteApp(object):
         """
         client = oauth2.Client(self._consumer, self.get_request_token(token))
         client.ca_certs = certifi.where()
+        return client
 
     def request(self, url, data="", headers=None, format='urlencoded',
                 method='GET', content_type=None, token=None):
