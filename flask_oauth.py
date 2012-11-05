@@ -197,6 +197,7 @@ class OAuthRemoteApp(object):
         self._consumer = oauth2.Consumer(self.consumer_key,
                                          self.consumer_secret)
         self._client = OAuthClient(self._consumer)
+        self._client.ca_certs = certifi.where()
 
     def status_okay(self, resp):
         """Given request data, checks if the status is okay."""
