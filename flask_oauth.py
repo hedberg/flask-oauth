@@ -15,6 +15,7 @@ from flask import request, session, json, redirect, Response
 from werkzeug import url_decode, url_encode, url_quote, \
      parse_options_header, Headers
 import oauth2
+import certifi
 
 
 _etree = None
@@ -104,7 +105,8 @@ class OAuthClient(oauth2.Client):
             'Content-Type':     'application/x-www-form-urlencoded',
             'Content-Length':   str(len(body))
         }
-        return httplib2.Http.request(self, uri, method='POST',
+        h = httplib2.Http(ca_certs=certifi.where())
+        return h.request(self, uri, method='POST',
                                      body=body, headers=headers)
 
 
@@ -236,7 +238,8 @@ class OAuthRemoteApp(object):
         Usually you don't have to do that but use the :meth:`request`
         method instead.
         """
-        return oauth2.Client(self._consumer, self.get_request_token(token))
+        client = oauth2.Client(self._consumer, self.get_request_token(token))
+        client.ca_certs = certifi.where()
 
     def request(self, url, data="", headers=None, format='urlencoded',
                 method='GET', content_type=None, token=None):
